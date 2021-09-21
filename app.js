@@ -10,7 +10,11 @@ app.use(express.json());
 
 var cors = require('cors');
 var whitelist = [
-  '*'
+  '*',
+  'localhost:3000',
+  'localhost:4000',
+  'localhost:4200',
+  'localhost:8100',
 ];
 
 
