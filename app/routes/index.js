@@ -13,6 +13,12 @@ router.use("/status", (req, res) => {
 //Rotas de Produtos
 import ProductRouter from './ProductRouter'
 router.use("/produtos", ProductRouter);
-//Fim Rotas de Landing
+
+
+
+//Rotas de Usuario
+import UserRouter from './UserRouter'
+router.use("/usuario", UserRouter);
+
 
 module.exports = router;
