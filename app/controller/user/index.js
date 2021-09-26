@@ -23,7 +23,15 @@ export default {
 
             const user = await api.get(`/usuarios/${email}/pedidos`);
 
-            res.send(user.data || []).status(200);
+            const getStatus = await user.data.map(async (item) => {
+                const itemStatus = await api.get(`/pedidos/${item.pedidoId}/status`);
+                Object.assign(item, {status: itemStatus.data});
+                return user.data;
+            });
+
+            const resolved = await Promise.all(getStatus);
+
+            res.send(resolved[0] || []).status(200);
         } catch (error) {
             console.log('\n\n')
             console.error('CATCH GET GetAllProduct');

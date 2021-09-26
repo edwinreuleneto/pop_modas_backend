@@ -4,7 +4,8 @@ export default {
     GetAllProduct: async (req, res) =>{
         try {
             const { pagina, categorias } = req.query;
-            const produtos = await api.get(`/produtos?pagina=${pagina}&quantidadeRegistros=10&somenteValidos=true&camposAdicionais=Atributo&camposAdicionais=Informacao&camposAdicionais=TabelaPreco${!!categorias ? '&categorias=' + categorias : ''}`);
+
+            const produtos = await api.get(`/produtos?pagina=${pagina}&quantidadeRegistros=10&camposAdicionais=Atributo&camposAdicionais=Informacao&camposAdicionais=TabelaPreco&somenteValidos=true${!!categorias ? '&categorias=' + categorias : ''}`);
 
             const getImages = await produtos.data.map(async (item) => {
                 let images = await api.get(`/produtos/${item.sku}/imagens?tipoIdentificador=Sku`);
@@ -31,10 +32,21 @@ export default {
             const { sku } = req.params;
             const produto = await api.get(`/produtos/${sku}?tipoIdentificador=Sku&camposAdicionais=Atributo&camposAdicionais=Informacao&camposAdicionais=TabelaPreco`);
             const image = await api.get(`/produtos/${produto.data.sku}/imagens?tipoIdentificador=Sku`);
+            
+            const relacionados = await api.get(`/produtos/${produto.data.sku}/relacionados?tipoIdentificador=Sku`);
 
+            const atribuidos = await relacionados.data.map( async (item) => {
+                const produto = await api.get(`/produtos/${item.produtoVarianteId}?tipoIdentificador=ProdutoVarianteId&camposAdicionais=Atributo`);
+                Object.assign(item, {produto: produto.data});
+                return relacionados.data;
+            });
+
+            const loadProdutos = await Promise.all(atribuidos);
+
+            // Object.assign(produto.data, { relacionados: loadProdutos});
             Object.assign(produto.data, {images: image.data})
             
-            res.send(produto.data || []).status(200);
+            res.send({produto: produto.data, relacionados: loadProdutos} || []).status(200);
         } catch (error) {
             console.log('\n\n')
             console.error('CATCH GET GetProduct');

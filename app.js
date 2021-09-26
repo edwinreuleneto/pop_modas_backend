@@ -10,11 +10,7 @@ app.use(express.json());
 
 var cors = require('cors');
 var whitelist = [
-  '*',
-  'http://localhost:3000',
-  'http://localhost:4000',
-  'http://localhost:4200',
-  'http://localhost:8100',
+  '*'
 ];
 
 
@@ -27,6 +23,12 @@ var corsOptionsDelegate = function (req, callback) {
   }
   callback(null, corsOptions) // callback expects two parameters: error and options
 }
+
+app.all('/', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+ });
 
 app.use('/api', cors(corsOptionsDelegate), Routes);
 if(process.env.API_STATUS == 'dev'){
