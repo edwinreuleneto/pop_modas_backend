@@ -30,7 +30,7 @@ export default {
     GetProduct: async (req, res) =>{
         try {
             const { sku } = req.params;
-            const produto = await api.get(`/produtos/${sku}?tipoIdentificador=Sku&camposAdicionais=Atributo&camposAdicionais=Informacao&camposAdicionais=TabelaPreco`);
+            const produto = await api.get(`/produtos/${sku}?tipoIdentificador=Sku&camposAdicionais=Atributo&camposAdicionais=Informacao&camposAdicionais=TabelaPreco&camposAdicionais=Estoque`);
             const image = await api.get(`/produtos/${produto.data.sku}/imagens?tipoIdentificador=Sku`);
             
             const relacionados = await api.get(`/produtos/${produto.data.sku}/relacionados?tipoIdentificador=Sku`);
