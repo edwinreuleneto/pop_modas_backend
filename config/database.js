@@ -8,6 +8,7 @@ module.exports = {
     host: process.env.DATABASE_HOST,
     port: process.env.DATABASE_PORT,
     dialect: "mysql",
+    logging: true,
     sync: { force: true },
     pool: {
         max: 20,
