@@ -22,7 +22,7 @@ if(process.env.API_STATUS == 'dev'){
     //RUN DEV
     app.listen(process.env.API_PORT, () => {
         console.log('\n \n ');
-        console.log(`                             ::${process.env.API_PORT} - Correndo!                                   `);
+        console.log(`                             ::${process.env.API_PORT} - Correndooo!                                   `);
     });
 }else{
     const https = require('https');
