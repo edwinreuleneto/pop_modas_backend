@@ -16,7 +16,7 @@ app.use(cors({
 }));
 
 
-app.use('/api', cors(corsOptionsDelegate), Routes);
+app.use('/api', Routes);
 if(process.env.API_STATUS == 'dev'){
     app.use(express.static(__dirname, { dotfiles: 'allow' } ));
     //RUN DEV
@@ -40,7 +40,7 @@ if(process.env.API_STATUS == 'dev'){
     httpsServer.listen(process.env.API_PORT, () => {
         console.log('\n \n ');
         console.log(`                             ::${process.env.API_PORT} - Correndo!                                   `);
-    }); 
+    });
 }
 
 
