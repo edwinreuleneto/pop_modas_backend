@@ -32,7 +32,7 @@ export default {
             const { sku } = req.params;
             const produto = await api.get(`/produtos/${sku}?tipoIdentificador=Sku&camposAdicionais=Atributo&camposAdicionais=Informacao&camposAdicionais=TabelaPreco&camposAdicionais=Estoque`);
             const image = await api.get(`/produtos/${produto.data.sku}/imagens?tipoIdentificador=Sku`);
-            
+
             const relacionados = await api.get(`/produtos/${produto.data.sku}/relacionados?tipoIdentificador=Sku`);
 
             const atribuidos = await relacionados.data.map( async (item) => {
@@ -45,7 +45,7 @@ export default {
 
             // Object.assign(produto.data, { relacionados: loadProdutos});
             Object.assign(produto.data, {images: image.data})
-            
+
             res.send({produto: produto.data, relacionados: loadProdutos} || []).status(200);
         } catch (error) {
             console.log('\n\n')
@@ -92,5 +92,29 @@ export default {
             });
         }
     },
-    
+    getCotacao: async (req, res) => {
+        try{
+            const { cep } = req.params;
+            const params = req.body
+
+            params.produtos.forEach(element => {
+                element.identificador = element.identificador.toString();
+            });
+
+            console.log(params);
+
+            const frete = await api.post(`/fretes/cotacoes?cep=${cep}&tipoIdentificador=ProdutoVarianteId`, params);
+
+            res.send(frete.data || []).status(200);
+        } catch (error) {
+            console.log('\n\n')
+            console.error('CATCH GET getCategorias');
+            console.error(error);
+            console.log('\n\n')
+            const e = new Error(error);
+            return res.status(500).json({
+                error:e.message
+            });
+        }
+    }
 }
